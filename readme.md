@@ -107,6 +107,6 @@ $ npm run build
 This task will create a distribution version of the project
 inside your local `dist/` folder
 
-    After this, project opens at http://localhost:6000 If not, just open a new tab in your browser and paste there
+    After this, project opens at http://localhost:9000 If not, just open a new tab in your browser and paste there
 
-http://localhost:6000
+http://localhost:9000
