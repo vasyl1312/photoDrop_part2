@@ -8,6 +8,13 @@
       "when": 1697697636300,
       "tag": "0000_gifted_ultimatum",
       "breakpoints": false
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1697783565144,
+      "tag": "0001_special_switch",
+      "breakpoints": false
     }
   ]
 }
