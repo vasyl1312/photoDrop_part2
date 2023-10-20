@@ -12,7 +12,7 @@ app.use(express.json())
 
 const port = process.env.PORT || 9001
 
-app.use('/login', loginRouter())
+app.use(['/login', '/reset'], loginRouter())
 app.use('/verify', verifyRouter())
 app.use('/api_docs', swaggerRouter)
 

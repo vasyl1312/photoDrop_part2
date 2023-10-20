@@ -1,4 +1,5 @@
 import dotenv from 'dotenv'
+import jwt from 'jsonwebtoken'
 import { sql } from 'drizzle-orm'
 import express, { Request, Response } from 'express'
 import connect from '../db/dbConnect'
@@ -20,7 +21,21 @@ const loginRouter = () => {
         .execute()
 
       if (existingUser.length > 0 && existingUser[0].verificationToken === code) {
-        return res.status(200).json(existingUser[0])
+        const token = jwt.sign({ phone: existingUser[0].phone }, `${process.env.JWT_SECRET}`)
+
+        await db
+          .update(users)
+          .set({ token: token })
+          .where(sql`${users.phone} = ${phone}`)
+          .execute() //update token
+
+        const updatedUser = await db
+          .select()
+          .from(users)
+          .where(sql`${users.phone} = ${phone}`)
+          .execute()
+
+        return res.status(200).json(updatedUser[0])
       } else {
         return res.status(400).json({ error: 'User not found or invalid code' })
       }

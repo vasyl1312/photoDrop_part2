@@ -20,7 +20,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/PhoneNumberAndCode"
+                "$ref": "#/components/schemas/PhoneNumber"
               }
             }
           }
@@ -30,9 +30,42 @@
             "description": "Authentication code sent successfully",
             "content": {
               "application/json": {
-                "example": {
-                  "phone": "+1234567890",
-                  "code": "484855"
+                "schema": {
+                  "$ref": "#/components/schemas/PhoneNumberAndCode"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/reset": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Reset authentication code",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PhoneNumber"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authentication code reset successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PhoneNumberAndCode"
                 }
               }
             }
@@ -65,14 +98,8 @@
             "description": "Verification successful",
             "content": {
               "application/json": {
-                "example": {
-                  "id": "9462b20d-3a7f-49c1-bc8a-e1c5345c271f",
-                  "phone": "+380987654321",
-                  "name": "test",
-                  "email": "test@example.com",
-                  "token": "testToken",
-                  "verificationToken": "967986",
-                  "avatar": "https://www.example.com/image.png"
+                "schema": {
+                  "$ref": "#/components/schemas/User"
                 }
               }
             }
@@ -131,6 +158,39 @@
           }
         },
         "required": ["phone", "code"]
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "9462b20d-3a7f-49c1-bc8a-e1c5345c271f"
+          },
+          "phone": {
+            "type": "string",
+            "example": "+380987654321"
+          },
+          "name": {
+            "type": "string",
+            "example": "test"
+          },
+          "email": {
+            "type": "string",
+            "example": "test@example.com"
+          },
+          "token": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwaG9uZSI6IiszODA5ODc2NTQzMjEiLCJpYXQiOjE2OTc3OTIwMTN9.moGHwc2WTcRk17R8lJS9YGhLZT1S6mRHVhVDcXLiy0U"
+          },
+          "verificationToken": {
+            "type": "string",
+            "example": "967986"
+          },
+          "avatar": {
+            "type": "string",
+            "example": "https://www.example.com/image.png"
+          }
+        }
       }
     }
   }
