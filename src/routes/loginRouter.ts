@@ -1,7 +1,7 @@
-import express, { Request, Response } from 'express'
 import axios from 'axios'
 import dotenv from 'dotenv'
 import { sql } from 'drizzle-orm'
+import express, { Request, Response } from 'express'
 import connect from '../db/dbConnect'
 import { users, TNewUsers } from '../db/schema/users'
 dotenv.config()
