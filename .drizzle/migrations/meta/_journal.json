@@ -15,6 +15,13 @@
       "when": 1697783565144,
       "tag": "0001_special_switch",
       "breakpoints": false
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1698044364466,
+      "tag": "0002_spotty_ego",
+      "breakpoints": false
     }
   ]
 }
