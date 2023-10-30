@@ -16,7 +16,7 @@ const s3Client = new S3Client(s3ClientConfig)
 
 async function getSignedDownloadUrl(path: any) {
   let command = new GetObjectCommand({ Bucket: bucket, Key: path })
-  return await getSignedUrl(s3Client, command, { expiresIn: 3600 })
+  return await getSignedUrl(s3Client, command)
 }
 
 const uploadPhotoToDb_2 = async (photoName: string) => {
