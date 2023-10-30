@@ -73,6 +73,14 @@ const addSelfieController = async (req: Request, res: Response) => {
           .where(sql`${usersSelfie.userId} = ${userId}`)
           .execute()
 
+        await db
+          .update(users)
+          .set({
+            avatar: urlPhoto.selfieUrl,
+          })
+          .where(sql`${users.id} = ${userId}`)
+          .execute()
+
         return res.status(200).json({ nameFile, url: presignedUrl })
       } catch (error) {
         console.error(`Error processing selfie: ${error}`)
