@@ -4,9 +4,13 @@ import { sql } from 'drizzle-orm'
 import { Request, Response } from 'express'
 import connect from '../db/dbConnect'
 import { users } from '../db/schema/users'
-import uploadPhotoToDb_2 from '../AWS/getUrlFromS3'
-import { generatePresignedUrl } from '../AWS/helper'
+// import uploadPhotoToDb_2 from '../AWS/getUrlFromS3'
+// import { generatePresignedUrl } from '../AWS/helper'
 import { usersSelfie, TNewUsersSelfie } from '../db/schema/selfie'
+const AWS = require('aws-sdk')
+const s3 = new AWS.S3()
+const axios = require('axios')
+
 dotenv.config()
 
 interface DecodedToken {
@@ -59,29 +63,67 @@ const addSelfieController = async (req: Request, res: Response) => {
             photoName += `.${fileExtension}`
           }
         }
+        // ............
 
-        const presignedUrl = await generatePresignedUrl(photoName)
-        const nameFile = url
+        async function generatePresignedUrl(photoName: string) {
+          const params = {
+            Bucket: process.env.AWS_BUCKET_NAME_STORAGE,
+            Key: photoName,
+            ACL: 'public-read',
+          }
 
-        const urlPhoto: any = await uploadPhotoToDb_2(photoName)
+          const presignedUrl = await s3.getSignedUrl('putObject', params)
+          return presignedUrl
+        }
 
-        await db
-          .update(usersSelfie)
-          .set({
-            url: urlPhoto.selfieUrl,
-          })
-          .where(sql`${usersSelfie.userId} = ${userId}`)
-          .execute()
+        async function uploadPhotoToDb_2(photoName: string) {
+          // Отримати підписаний URL для завантаження фото
+          const presignedUrl = await generatePresignedUrl(photoName)
 
-        await db
-          .update(users)
-          .set({
-            avatar: urlPhoto.selfieUrl,
-          })
-          .where(sql`${users.id} = ${userId}`)
-          .execute()
+          // Завантажити фото на S3 за допомогою axios (без фактичних даних фото)
 
-        return res.status(200).json({ nameFile, url: presignedUrl })
+          try {
+            const response = await axios.put(presignedUrl, null, {
+              headers: {
+                'Content-Type': 'image/jpg', // Змініть Content-Type на відповідний тип фото
+              },
+            })
+            console.log(presignedUrl, 'jjk', response)
+
+            // Повернути URL фото після завантаження
+            return presignedUrl
+          } catch (error) {
+            // Обробити помилки завантаження
+            console.error('Помилка завантаження фото на S3:', error)
+            throw error
+          }
+        }
+
+        const urlPhoto = await uploadPhotoToDb_2(photoName)
+
+        // const presignedUrl = await generatePresignedUrl(photoName)
+        // const nameFile = url
+
+        // const urlPhoto: any = await uploadPhotoToDb_2(photoName)
+
+        // await db
+        //   .update(usersSelfie)
+        //   .set({
+        //     url: urlPhoto.selfieUrl,
+        //   })
+        //   .where(sql`${usersSelfie.userId} = ${userId}`)
+        //   .execute()
+
+        // await db
+        //   .update(users)
+        //   .set({
+        //     avatar: urlPhoto.selfieUrl,
+        //   })
+        //   .where(sql`${users.id} = ${userId}`)
+        //   .execute()
+
+        return res.status(200).json()
+        // return res.status(200).json({ nameFile, url: presignedUrl })
       } catch (error) {
         console.error(`Error processing selfie: ${error}`)
         return res.status(500).json({ error: 'Internal server error' })

@@ -19,7 +19,7 @@ export const generatePresignedUrl = async (photoName: string): Promise<string | 
   const params = {
     Bucket: bucketName,
     Key: key,
-    Expires: 3600,
+    Expires: 604800,
   }
 
   try {

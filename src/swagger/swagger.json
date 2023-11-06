@@ -173,20 +173,14 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
                 "type": "object",
                 "properties": {
-                  "selfie": {
-                    "type": "object",
-                    "properties": {
-                      "fileName": {
-                        "type": "string",
-                        "description": "File name of the selfie",
-                        "example": "1.png"
-                      }
-                    },
-                    "required": ["fileName"]
+                  "avatar": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Avatar file to be uploaded"
                   }
                 }
               }
@@ -195,25 +189,7 @@
         },
         "responses": {
           "200": {
-            "description": "Selfie uploaded successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "nameFile": {
-                      "type": "string",
-                      "example": "1.png"
-                    },
-                    "url": {
-                      "type": "string",
-                      "example": "https://photo-drop-3-updated.s3.eu-central-1.amazonaws.com/selfie/selfie_9462b20d-3a7f-49c1-bc8a-e1c5345c271f_d7df5a6a-0fc3-44c0-abbf-e684bf5f3b59.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIATS5BI5YUWRUMCD6Q%2F20231023%2Feu-central-1%2Fs3%2Faws4_request&X-Amz-Date=20231023T093936Z&X-Amz-Expires=3600&X-Amz-Signature=f8b3eb3aa515c064942ef5d11a02a8fdadf7ce591664561bd2fbe42becc067b6&X-Amz-SignedHeaders=host"
-                    }
-                  },
-                  "required": ["nameFile", "url"]
-                }
-              }
-            }
+            "description": "Selfie uploaded successfully"
           },
           "400": {
             "description": "Bad request"
